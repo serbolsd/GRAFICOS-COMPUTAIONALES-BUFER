@@ -28,6 +28,7 @@ public:
 	void DrawhlineFormato(int x, int y, int longitud, char* valor);
 	void DrawVlineFormato(int x, int y, int longitud, char* valor);
 	void DrawMatrisFormato();
+	void DrawnLineDiagonal(float uOrign,float vOrigen, float uDestino, float vDestino, int Value);
 	
 	void calcularBilineal();
 

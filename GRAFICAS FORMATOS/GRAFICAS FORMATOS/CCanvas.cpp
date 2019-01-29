@@ -22,6 +22,7 @@ void CCanvas::MatrisEnteros()
 
 	EspecificacionMatriz();
 	int selec = 0;
+	DrawnLineDiagonal(0.25,0.0,1,1,5);
 	while (selec != 5)
 	{
 
@@ -219,6 +220,10 @@ void CCanvas::EspecificacionMatriz()
 	m_pitch = m_tamaño * Columnas;
 	arreglo = (int*)malloc(Columnas * filas * sizeof(int));
 	initarray = arreglo;
+	normX = 1;
+	normX = (normX / Columnas);
+	normY = 1;
+	normY = normY /filas;
 	for (int i = 0; i < filas*Columnas; i++)
 	{
 		*(initarray + index + i) = 0;
@@ -696,4 +701,81 @@ void CCanvas::calcularBilineal()
 		}
 
 	}
+}
+
+void CCanvas::DrawnLineDiagonal(float uOrign, float vOrigen, float uDestino, float vDestino, int Value)
+{
+	int uEmpiezo = 0;
+	int vEmpiezo = 0;
+	for (int i = 0; i < Columnas; i++)//for calculated the col
+	{
+
+		if (uOrign >= 1)
+		{
+			uEmpiezo = Columnas-1;
+			break;
+		}
+		if (!(normX*(i+1)<uOrign))
+		{
+			uEmpiezo = i;
+			break;
+		}
+	}
+	for (int i = 0; i < filas; i++)//for calculated the raw
+	{
+		
+		if (vOrigen >= 1)
+		{
+			vEmpiezo = filas-1;
+			break;
+		}
+		else if (!(normY*(i+1)<vOrigen))
+		{
+			vEmpiezo = i;
+			break;
+		}
+	}
+
+	float m = (vDestino-vEmpiezo) / (uDestino - uOrign);
+	int uInde = uEmpiezo;
+	int vInde = vEmpiezo;
+
+	for (int i = vEmpiezo; i < filas; i++)
+	{
+		float x = (((normY*i) - vOrigen) / m) + uOrign;
+		for (int i=0;i<Columnas;i++)
+		{
+			if (!(normX*(i + 1) < x))
+			{
+				uEmpiezo = i;
+				break;
+			}
+		}
+		
+		for (int j = uEmpiezo; j < Columnas; j++)
+		{
+			
+			for (float k = normX*j; k < normX*(j+1); k+=0.0001)
+			{
+				if (!(k<uOrign))
+				{
+					float y = m * (k - uOrign);
+					y+= vOrigen;
+					if (y > normY*(i + 1))
+					{
+						break;
+					}
+					else
+					{
+						m_seter(j+1, filas - i, Value);
+						break;
+					}
+
+				}
+			}
+		}
+
+
+	}
+
 }
